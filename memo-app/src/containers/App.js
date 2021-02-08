@@ -9,6 +9,7 @@ import { bindActionCreators } from "redux";
 
 import MemoListContainer from "./MemoListContainer";
 import MemoViewerContainer from './MemoViewerContainer';
+import Spinner from "../components/Spinner";
 
 class App extends Component {
     async componentDidMount() {
@@ -59,12 +60,17 @@ class App extends Component {
     };
 
     render() {
+        const { pending } = this.props;
+
+        console.log(pending,'pending')
+
         return (
             <Layout>
                 <Header/>
                 <Layout.main>
                     <WriteMemo />
                     <MemoListContainer />
+                    <Spinner visible={pending['memo/GET_INITIAL_MEMO'] || pending['memo/GET_PREVIOUS_MEMO']}/>
                 </Layout.main>
                 <MemoViewerContainer />
             </Layout>
@@ -75,7 +81,8 @@ class App extends Component {
 export default connect(
     (state) => ({
         cursor: state.memo.getIn(['data',0,'id']),
-        endCursor: state.memo.getIn(['data', state.memo.get('data').size - 1, 'id'])
+        endCursor: state.memo.getIn(['data', state.memo.get('data').size - 1, 'id']),
+        pending: state.pender.pending
     }), // 현재는 비어있는 객체를 반환
     (dispatch) =>({
         MemoActions: bindActionCreators(memoActions, dispatch)

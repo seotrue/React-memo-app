@@ -71,6 +71,11 @@ class Memo extends Component {
         onOpen : PropTypes.func
     };
 
+    // 최적화: 현재 props 와 이전 props 를 비교해서 memo 값이 다를때에만 render 메소드를 실행하도록 설정하시면 됩니다.
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.memo !== this.props.memo;
+    }
+
     handleClick = () => {
         const { memo, onOpen } = this.props;
         onOpen(memo)
