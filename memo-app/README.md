@@ -1,26 +1,60 @@
-### jsconfig.json
-프로젝트 루트 설정을 하고 나서도 VSCode 에서 불러온 파일의 세부정보들을 제대로 불러와서 자동완성이 제대로 작동하도록 해줍니다.
+# React로 메모에플리케이션 구현하기
+- React로 프론트단을 구현 / json-server server 대응
 
+### 기능
+- 메모 작성 
+- 메모 수정(상세보기), 삭제 
+- 스크롤 인피니티로 기존 메모 로드
 
-### 디렉터리 구조
-- 프로젠테이션널 컴포넌트   
-    WhiteBox 그림자가 있는 흰색 박스입니다.  
-    InputPlaceholder 흰색 박스를 클릭하기전, "메모를 입력하세요.." 를 띄우는 컴포넌트 입니다.
-    InputSet input 과 textarea 가 함께 있는 세트입니다.
-    SaveButton 오른쪽에 정렬된 완료 버튼 입니다.
-    
-- 컨테이너 컴포넌트   
-    WriteMemo 리덕스와 상태를 연동하여 작성 기능이 작동하게 해주는 컴포넌트입니다.
+### 사용 라이브러리 설치
+- pender : 액션 사용 시 자동으로 성공, 실패, 진행의 액션을 나눠줌
+```
+...pender({
+        type: GET_PREVIOUS_MEMO,
+        // api 호출 시 성공
+        onSuccess: (state, action) => {
+            const data = state.get('data');
+            return state.set('data', data.concat(fromJS(action.payload.data)))
+        }
+    })
+```
+- immutale : 불변성을 지키기 위해 제공하는 Map, set, get 등 사용  
+    개인적으로 immer 사용이 더 편했다
+```
+     [CLOSE_VIEWER] : (state, action) => state.setIn(['memo','open'],false),
+```
+  
+- Json-server:  server 대응해주는 라이브러리      
+> fake-server - db.json // json 의 데이터를 잡아주면 알아서 API 호출 가능
 
-일반 DOM 엘리먼트가 아닌 컴포넌트를 스타일링 할 때에는 styled(Component) 형식으로 스타일링합니다.
+### 폴터 구조
+`components` : 기능별  
+`contauners` : 컴포넌트를 감싸는 큰 상위
+`lib` : util 모음  
+`modlues` : 액션
+`sheard` : 인풋창 등 자주 사용하는 컴포넌트 
 
-콜백 ref [https://ko.reactjs.org/docs/refs-and-the-dom.html]
+### 구조화
+```
++-- componenrs
+|   +-- MemoList
+|       +-- index.js
+|       +-- Memo.js // 메모의 제목, 내용, 상세열기(onClick)  
+|       +-- MemoList.js
++-- container 
+    +-- MenoListContainer.js // 스토어에서 데이터를 가져와 props로 내려준다.
+```
+- 작성 메모  
+```
++-- componenrs
+|   +-- WriteMemo
+|       +-- index.js
+|       +-- inputPlaceholder.js
+|       +-- WhiteBox.js
 
+```
+- 메모 수정, 삭제
 
-서버 실행
-json-server --watch db.json --port 3001
-
-Immutable js 
-https://pks2974.medium.com/immutable-js-%EA%B0%84%EB%8B%A8%EC%A0%95%EB%A6%AC-bbd5ad20bbdf
-
-
+- 메모 저장
+- 메모 로드 
+- 레이아웃
