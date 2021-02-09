@@ -58,3 +58,6 @@
 - 메모 저장
 - 메모 로드 
 - 레이아웃
+
+### 참고 URL
+[벨로퍼트 메모 앱 만들기](https://redux-advanced.vlpt.us/3/09.html)
